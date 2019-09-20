@@ -20,15 +20,13 @@ Q_OBJECT
 public:
     explicit Canvas(QWidget *parent = nullptr);
 
-    ~Canvas() override;
-
     QColor getColor() const;
 
     enum MouseModes {
         SELECTION,
         PEN,
         RECTANGLE,
-        OVOID
+        ELLIPSE
     };
 
 public slots:
@@ -45,9 +43,9 @@ public slots:
 
     void setPenJoinStyle(QAction *);
 
-    void deleteLastLine();
+    void deleteLastShape();
 
-    void deleteAllLines();
+    void deleteAllShapes();
 
     void setLineWidth(int);
 
@@ -55,8 +53,6 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
     void keyPressEvent(QKeyEvent *event) override;
-
-    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     MouseModes mouseMod = SELECTION;
@@ -72,6 +68,7 @@ private:
     qreal penSize = 1;
 
     int lastSelected = -1;
+    QPoint lastMousePosition;
 
     void mousePressEvent(QMouseEvent *event) override;
 

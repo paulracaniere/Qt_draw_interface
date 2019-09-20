@@ -1,7 +1,3 @@
-//
-// Created by Paul Racanière on 18/09/2019.
-//
-
 #ifndef QT_TP2_SHAPE_H
 #define QT_TP2_SHAPE_H
 
@@ -9,7 +5,8 @@
 #include <QPoint>
 
 // Abstract class shape to designate any shape to draw on canvas
-class Shape {
+class Shape : public QObject {
+Q_OBJECT
 public:
     virtual void draw(QPainter *) = 0;
 
@@ -22,6 +19,13 @@ public:
     virtual void setP2(QPoint) = 0;
 
     virtual bool intersects(const QRect &) = 0;
+
+    bool isSelected() { return selected; };
+
+    void setSelected(bool isSelected) { selected = isSelected; }
+
+private:
+    bool selected = false;
 };
 
 

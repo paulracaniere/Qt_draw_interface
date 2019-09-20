@@ -13,16 +13,16 @@ endif ()
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(Qt_TP2
-        MainWindow.cpp
-        main.cpp
-        Canvas.cpp
-        Canvas.h
-        Shape.h
-        Rectangle.h
-        Line.h
-        Line.cpp
-        Rectangle.cpp
-        Ellipse.cpp
-        Ellipse.h)
+        src/MainWindow.cpp
+        src/main.cpp
+        src/Canvas.cpp
+        src/Canvas.h
+        src/Shape.h
+        src/Rectangle.h
+        src/Line.h
+        src/Line.cpp
+        src/Rectangle.cpp
+        src/Ellipse.cpp
+        src/Ellipse.h)
 
 target_link_libraries(Qt_TP2 Qt5::Widgets)

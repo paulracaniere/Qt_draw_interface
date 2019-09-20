@@ -2,6 +2,18 @@
 
 void Rectangle::draw(QPainter *p) {
     p->drawRect(*this);
+    if (isSelected()) {
+        QPen pen = p->pen();
+        QBrush brush = p->brush();
+        p->setPen(Qt::black);
+        p->setPen(Qt::DashLine);
+        p->setBrush(Qt::NoBrush);
+        int offset = 3 + pen.width() / 2;
+        int doffset = 6 + pen.width();
+        p->drawRect(this->x() - offset, this->y() - offset, this->width() + doffset, this->height() + doffset);
+        p->setPen(pen);
+        p->setBrush(brush);
+    }
 }
 
 QPoint Rectangle::getP1() const {

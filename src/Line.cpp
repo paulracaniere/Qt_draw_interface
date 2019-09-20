@@ -1,8 +1,18 @@
 #include "Line.h"
-#include <iostream>
 
 void Line::draw(QPainter *p) {
-    p->drawLine(*this);
+    if (isSelected()) {
+        QPen pen = p->pen();
+        QBrush brush = p->brush();
+        p->setPen(Qt::black);
+        p->setPen(Qt::DashLine);
+        p->setBrush(Qt::NoBrush);
+        p->drawLine(*this);
+        p->setPen(pen);
+        p->setBrush(brush);
+    } else {
+        p->drawLine(*this);
+    }
 }
 
 QPoint Line::getP1() const {
@@ -32,4 +42,3 @@ bool Line::intersects(const QRect &rect) {
            (QLineF::intersect(line3, nullptr) == QLineF::IntersectType::BoundedIntersection) ||
            (QLineF::intersect(line4, nullptr) == QLineF::IntersectType::BoundedIntersection);
 }
-

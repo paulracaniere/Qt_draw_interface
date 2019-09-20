@@ -1,17 +1,13 @@
-//
-// Created by Paul Racanière on 18/09/2019.
-//
-
-#ifndef QT_TP2_RECTANGLE_H
-#define QT_TP2_RECTANGLE_H
+#ifndef QT_TP2_ELLIPSE_H
+#define QT_TP2_ELLIPSE_H
 
 #include "Shape.h"
 #include <QRect>
 
-
-class Rectangle : public Shape, QRect {
+class Ellipse : public Shape, QRect {
+Q_OBJECT
 public:
-    Rectangle(QPoint p1, QPoint p2) : QRect(p1, p2) {}
+    Ellipse(QPoint p1, QPoint p2) : QRect(p1, p2) {}
 
     void draw(QPainter *) override;
 
@@ -27,4 +23,4 @@ public:
 };
 
 
-#endif //QT_TP2_RECTANGLE_H
+#endif //QT_TP2_ELLIPSE_H

@@ -5,13 +5,16 @@
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent) {
 
+    // Creates a drawing zone in the window
     canvas = new Canvas(this);
     setCentralWidget(canvas);
 
+    // Creates basic menus
     QMenuBar *menuBar = this->menuBar();
     QMenu *fileMenu = menuBar->addMenu(tr("File"));
     QMenu *editMenu = menuBar->addMenu(tr("Edit"));
 
+    // Overrides standard Qt quitting action
     auto quit_action = new QAction(QIcon("icons/quit.png"), tr("Quit"), this);
     quit_action->setShortcut(QKeySequence("Ctrl+Q"));
     quit_action->setToolTip(tr("Quit program"));
@@ -19,22 +22,25 @@ MainWindow::MainWindow(QWidget *parent) :
     quit_action->setIconVisibleInMenu(false);
     connect(quit_action, &QAction::triggered, this, &MainWindow::close);
 
+    // Defines a cancel / undo action
     auto cancel_action = new QAction(QIcon("icons/cancel.png"), tr("Cancel"), this);
     cancel_action->setShortcut(QKeySequence("Ctrl+Z"));
     cancel_action->setToolTip(tr("Cancel last action"));
     cancel_action->setIconVisibleInMenu(false);
     editMenu->addAction(cancel_action);
-    connect(cancel_action, &QAction::triggered, canvas, &Canvas::deleteLastLine);
+    connect(cancel_action, &QAction::triggered, canvas, &Canvas::deleteLastShape);
 
+    // Defines a erase all action
     auto delete_all_action = new QAction(QIcon("icons/delete_all.png"), tr("Delete all"), this);
     delete_all_action->setShortcut(QKeySequence("Ctrl+Shift+D"));
     delete_all_action->setToolTip(tr("Delete all lines"));
     delete_all_action->setIconVisibleInMenu(false);
     editMenu->addAction(delete_all_action);
-    connect(delete_all_action, &QAction::triggered, canvas, &Canvas::deleteAllLines);
+    connect(delete_all_action, &QAction::triggered, canvas, &Canvas::deleteAllShapes);
 
     editMenu->addSeparator();
 
+    // Defines a color menu for drawing
     auto color_action = new QAction(tr("Color"), this);
     color_action->setShortcut(QKeySequence("Ctrl+Alt+C"));
     color_action->setIcon(QIcon("icons/color.png"));
@@ -42,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     editMenu->addAction(color_action);
     connect(color_action, &QAction::triggered, this, &MainWindow::openColorMenu);
 
-    // Brush toolbar
+    // Defines the brush / pen toolbar that is visible if the user commands it
     auto brushToolBar = new QToolBar(tr("Brush"), this);
     brushToolBar->setMovable(false);
     brushToolBar->setVisible(false);
@@ -129,7 +135,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     brushToolBar->addSeparator();
 
-    auto brushFillAction = new QAction(tr("Fill"));
+    // Defines a action whether to fill the shape or not
+    auto brushFillAction = new QAction(tr("Fill"), this);
     brushFillAction->setCheckable(true);
     brushToolBar->addAction(brushFillAction);
     connect(brushFillAction, &QAction::triggered, canvas, &Canvas::setBrushFill);
@@ -145,6 +152,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(brushWidthSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), canvas, &Canvas::setLineWidth);
     brushToolBar->addWidget(brushWidthSpinBox);
 
+    // Defines the edit tool bar that contains most of the actions not specific to the drawing
     auto editToolBar = new QToolBar(tr("Edit"), this);
     editToolBar->setMovable(false);
     editToolBar->addActions(mouseModActionGroup->actions());
@@ -155,23 +163,21 @@ MainWindow::MainWindow(QWidget *parent) :
     editToolBar->addAction(color_action);
     editToolBar->addAction(brush_action);
 
+    // Sets the positions of the tool bars in the window
     addToolBar(Qt::LeftToolBarArea, editToolBar);
     addToolBar(Qt::RightToolBarArea, brushToolBar);
 }
 
 void MainWindow::openColorMenu() {
+    // Wraps Qt function to load the color from the color menu of the OS
     QColor color = QColorDialog::getColor(canvas->getColor(), this);
     if (color.isValid()) canvas->setColor(color);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+    // Redefines the closing event of the window to make sure the user want to quit
     if (QMessageBox::question(this, tr("Closing?"), tr("Are you sure you want to quit?")) ==
         QMessageBox::Yes)
         event->accept();
     else event->ignore();
-
 }
-
-MainWindow::~MainWindow() {
-    delete canvas;
-};

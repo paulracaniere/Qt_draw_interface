@@ -1,7 +1,3 @@
-//
-// Created by Paul Racanière on 18/09/2019.
-//
-
 #ifndef QT_TP2_LINE_H
 #define QT_TP2_LINE_H
 
@@ -9,6 +5,7 @@
 #include "Shape.h"
 
 class Line : public Shape, QLineF {
+Q_OBJECT
 public:
     Line(QPoint p1, QPoint p2) : QLineF(p1, p2) {}
 
