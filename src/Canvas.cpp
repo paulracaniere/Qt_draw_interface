@@ -260,9 +260,12 @@ void Canvas::keyPressEvent(QKeyEvent *event) {
                 shapes[lastSelected]->setP2(shapes[lastSelected]->getP2() + QPoint(+10, 0));
                 update();
                 break;
-                // When hitting backspace key, the last selected shape is deleted
+            case (Qt::Key_Delete):
             case (Qt::Key_Backspace):
+                // When hitting backspace or delete key, the last selected shape is deleted
                 shapes.removeAt(lastSelected);
+                pens.removeAt(lastSelected);
+                brushes.removeAt(lastSelected);
                 lastSelected = -1;
                 update();
         }
