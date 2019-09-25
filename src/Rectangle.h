@@ -5,10 +5,14 @@
 #include <QRect>
 
 
-class Rectangle : public Shape, QRect {
+class Rectangle : public Shape {
 Q_OBJECT
 public:
-    Rectangle(QPoint p1, QPoint p2) : QRect(p1, p2) {}
+    Rectangle() = default;
+
+    Rectangle(QPoint p1, QPoint p2) : rectangle(p1, p2) {}
+
+    Rectangle(const Rectangle &rect) : rectangle(rect.getP1(), rect.getP2()) {}
 
     void draw(QPainter *) override;
 
@@ -21,7 +25,17 @@ public:
     void setP2(QPoint) override;
 
     bool intersects(const QRect &) override;
+
+    inline QString getClassName() const override { return "Rectangle"; }
+
+    void write(QDataStream &) const override;
+
+    void read(QDataStream &) override;
+
+private:
+    QRect rectangle;
 };
 
+Q_DECLARE_METATYPE(Rectangle);
 
 #endif //QT_TP2_RECTANGLE_H

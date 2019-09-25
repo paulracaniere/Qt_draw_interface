@@ -49,6 +49,10 @@ public slots:
 
     void setLineWidth(int);
 
+    void saveAllShapes();
+
+    void readAllShapes();
+
 protected:
     void paintEvent(QPaintEvent *) override;
 

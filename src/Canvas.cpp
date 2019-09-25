@@ -1,6 +1,15 @@
 #include "Canvas.h"
 #include <QPainter>
 #include <QMessageBox>
+#include <QFileDialog>
+
+// Shape factory
+Shape *createShape(const QString &shapeName) {
+    if (shapeName == "Line") return new Line;
+    else if (shapeName == "Rectangle") return new Rectangle;
+    else if (shapeName == "Ellipse") return new Ellipse;
+    return nullptr;
+}
 
 Canvas::Canvas(QWidget *parent) : QWidget(parent) {
     // Window size
@@ -269,5 +278,78 @@ void Canvas::keyPressEvent(QKeyEvent *event) {
                 lastSelected = -1;
                 update();
         }
+    }
+}
+
+void Canvas::saveAllShapes() {
+    // Opens file dialog to save file
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save canvas"), "",
+                                                    tr("Canvases (*.can);;All Files (*)"));
+    // Does nothing if empty, otherwise create a file
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                                     file.errorString());
+            return;
+        }
+        QDataStream out(&file);
+        out.setVersion(QDataStream::Qt_4_5);
+
+        out << shapes.size();
+        for (Shape *shape_ptr : shapes) {
+            out << *shape_ptr;
+        }
+        for (QPen *pen_ptr : pens) {
+            out << *pen_ptr;
+        }
+        for (QBrush *brush_ptr : brushes) {
+            out << *brush_ptr;
+        }
+    }
+}
+
+void Canvas::readAllShapes() {
+    // Opens file dialog to save file
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open canvas"), "",
+                                                    tr("Canvases (*.can);;All Files (*)"));
+    // Does nothing if empty, otherwise create a file
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                                     file.errorString());
+            return;
+        }
+        QDataStream in(&file);
+        in.setVersion(QDataStream::Qt_4_5);
+        shapes.clear();
+        pens.clear();
+        brushes.clear();
+        int nbOfShapes;
+        QVariant variant;
+        in >> nbOfShapes;
+        for (auto i = 0; i < nbOfShapes; i++) {
+            QString shapeName;
+            in >> shapeName;
+            Shape *shape = createShape(shapeName);
+            in >> *shape;
+            shapes.push_back(shape);
+        }
+        for (auto i = 0; i < nbOfShapes; i++) {
+            auto pen = new QPen;
+            in >> *pen;
+            pens.push_back(pen);
+        }
+        for (auto i = 0; i < nbOfShapes; i++) {
+            auto brush = new QBrush;
+            in >> *brush;
+            brushes.push_back(brush);
+        }
+        update();
     }
 }

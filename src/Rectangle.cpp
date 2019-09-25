@@ -1,7 +1,8 @@
 #include "Rectangle.h"
+#include <QVariant>
 
 void Rectangle::draw(QPainter *p) {
-    p->drawRect(*this);
+    p->drawRect(rectangle);
     if (isSelected()) {
         QPen pen = p->pen();
         QBrush brush = p->brush();
@@ -10,28 +11,38 @@ void Rectangle::draw(QPainter *p) {
         p->setBrush(Qt::NoBrush);
         int offset = 3 + pen.width() / 2;
         int doffset = 6 + pen.width();
-        p->drawRect(this->x() - offset, this->y() - offset, this->width() + doffset, this->height() + doffset);
+        p->drawRect(rectangle.x() - offset, rectangle.y() - offset,
+                    rectangle.width() + doffset, rectangle.height() + doffset);
         p->setPen(pen);
         p->setBrush(brush);
     }
 }
 
 QPoint Rectangle::getP1() const {
-    return QRect::topLeft();
+    return rectangle.topLeft();
 }
 
 void Rectangle::setP1(QPoint p) {
-    QRect::setTopLeft(p);
+    rectangle.setTopLeft(p);
 }
 
 QPoint Rectangle::getP2() const {
-    return QRect::bottomRight();
+    return rectangle.bottomRight();
 }
 
 void Rectangle::setP2(QPoint p) {
-    QRect::setBottomRight(p);
+    rectangle.setBottomRight(p);
 }
 
 bool Rectangle::intersects(const QRect &rect) {
-    return QRect::intersects(rect);
+    return rectangle.intersects(rect);
+}
+
+void Rectangle::write(QDataStream &out) const {
+    out << getClassName();
+    out << rectangle;
+}
+
+void Rectangle::read(QDataStream &in) {
+    in >> rectangle;
 }

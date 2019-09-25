@@ -30,6 +30,22 @@ MainWindow::MainWindow(QWidget *parent) :
     editMenu->addAction(cancel_action);
     connect(cancel_action, &QAction::triggered, canvas, &Canvas::deleteLastShape);
 
+    // Defines a open action
+    auto open_action = new QAction(QIcon("icons/open.png"), tr("Open"), this);
+    open_action->setShortcut(QKeySequence("Ctrl+O"));
+    open_action->setToolTip(tr("Open"));
+    open_action->setIconVisibleInMenu(false);
+    editMenu->addAction(open_action);
+    connect(open_action, &QAction::triggered, canvas, &Canvas::readAllShapes);
+
+    // Defines a save action
+    auto save_action = new QAction(QIcon("icons/save.png"), tr("Save"), this);
+    save_action->setShortcut(QKeySequence("Ctrl+S"));
+    save_action->setToolTip(tr("Saves all shapes"));
+    save_action->setIconVisibleInMenu(false);
+    editMenu->addAction(save_action);
+    connect(save_action, &QAction::triggered, canvas, &Canvas::saveAllShapes);
+
     // Defines a erase all action
     auto delete_all_action = new QAction(QIcon("icons/delete_all.png"), tr("Delete all"), this);
     delete_all_action->setShortcut(QKeySequence("Ctrl+Shift+D"));
@@ -157,6 +173,8 @@ MainWindow::MainWindow(QWidget *parent) :
     editToolBar->setMovable(false);
     editToolBar->addActions(mouseModActionGroup->actions());
     editToolBar->addSeparator();
+    editToolBar->addAction(open_action);
+    editToolBar->addAction(save_action);
     editToolBar->addAction(cancel_action);
     editToolBar->addAction(delete_all_action);
     editToolBar->addSeparator();

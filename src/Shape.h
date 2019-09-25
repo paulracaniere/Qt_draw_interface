@@ -3,6 +3,8 @@
 
 #include <QPainter>
 #include <QPoint>
+#include <QString>
+#include <QDataStream>
 
 // Abstract class shape to designate any shape to draw on canvas
 class Shape : public QObject {
@@ -20,6 +22,12 @@ public:
 
     virtual bool intersects(const QRect &) = 0;
 
+    virtual QString getClassName() const = 0;
+
+    virtual void write(QDataStream &) const = 0;
+
+    virtual void read(QDataStream &) = 0;
+
     bool isSelected() { return selected; };
 
     void setSelected(bool isSelected) { selected = isSelected; }
@@ -27,6 +35,18 @@ public:
 private:
     bool selected = false;
 };
+
+inline QDataStream &operator<<(QDataStream &ds, const Shape &shape) {
+    shape.write(ds);
+    return ds;
+}
+
+inline QDataStream &operator>>(QDataStream &ds, Shape &shape) {
+    shape.read(ds);
+    return ds;
+}
+
+Q_DECLARE_OPAQUE_POINTER(Shape*);
 
 
 #endif //QT_TP2_SHAPE_H
