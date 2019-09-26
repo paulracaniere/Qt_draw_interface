@@ -23,6 +23,9 @@ add_executable(Qt_TP2
         src/Line.cpp
         src/Rectangle.cpp
         src/Ellipse.cpp
-        src/Ellipse.h)
+        src/Ellipse.h
+        src/Preview.cpp
+        src/Preview.h
+        src/preview.ui)
 
 target_link_libraries(Qt_TP2 Qt5::Widgets)

@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     canvas = new Canvas(this);
     setCentralWidget(canvas);
 
+    // Creates the preview window
+    preview = new Preview(this, canvas);
+    preview->show();
+
     // Creates basic menus
     QMenuBar *menuBar = this->menuBar();
     QMenu *fileMenu = menuBar->addMenu(tr("File"));
@@ -77,6 +81,13 @@ MainWindow::MainWindow(QWidget *parent) :
     brush_action->setIconVisibleInMenu(false);
     editMenu->addAction(brush_action);
     connect(brush_action, &QAction::triggered, brushToolBar, &QToolBar::setVisible);
+
+    // Preview button
+    auto preview_action = new QAction(tr("Preview"), this);
+    preview_action->setShortcut(QKeySequence("Ctrl+Alt+P"));
+    preview_action->setIconVisibleInMenu(false);
+    editMenu->addAction(preview_action);
+    connect(preview_action, &QAction::triggered, preview, &Preview::show);
 
     // Mouse mode actions
     auto mouseModActionGroup = new QActionGroup(this);
@@ -180,6 +191,7 @@ MainWindow::MainWindow(QWidget *parent) :
     editToolBar->addSeparator();
     editToolBar->addAction(color_action);
     editToolBar->addAction(brush_action);
+    editToolBar->addAction(preview_action);
 
     // Sets the positions of the tool bars in the window
     addToolBar(Qt::LeftToolBarArea, editToolBar);

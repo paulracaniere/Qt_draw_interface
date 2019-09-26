@@ -16,6 +16,7 @@
 #include <QSpinBox>
 
 #include "Canvas.h"
+#include "Preview.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -26,6 +27,8 @@ public:
 
 private:
     Canvas *canvas;
+
+    Preview *preview;
 
     void openColorMenu();
 };

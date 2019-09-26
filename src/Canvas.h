@@ -22,6 +22,14 @@ public:
 
     QColor getColor() const;
 
+    inline QPen getPen() const {
+        return QPen(brushStyle, penSize, penStyle, penCapStyle, penJoinStyle);
+    }
+
+    inline QBrush getBrush() const {
+        return QBrush(penColor, brushStyle);
+    }
+
     enum MouseModes {
         SELECTION,
         PEN,
