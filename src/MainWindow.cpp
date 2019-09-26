@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Creates the preview window
     preview = new Preview(this, canvas);
-    preview->show();
 
     // Creates basic menus
     QMenuBar *menuBar = this->menuBar();
